@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/%08videos/widgets/video_button.dart';
+import 'package:tiktok_clone/features/%08videos/widgets/video_comment.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -69,7 +71,9 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    if (info.visibleFraction == 1 && !_videoPlayerController.value.isPlaying) {
+    if (info.visibleFraction == 1 &&
+        !_isPause &&
+        !_videoPlayerController.value.isPlaying) {
       _videoPlayerController.play();
     }
   }
@@ -99,6 +103,19 @@ class _VideoPostState extends State<VideoPost>
         _fullCaption = true;
       });
     }
+  }
+
+  void _onCommentsTap(BuildContext context) async {
+    if (_videoPlayerController.value.isPlaying == true) {
+      _ontogglePause();
+    }
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => const VIdeoComments(),
+    );
+    _ontogglePause();
   }
 
   @override
@@ -142,45 +159,77 @@ class _VideoPostState extends State<VideoPost>
             ),
           )),
           Positioned(
+            bottom: 20,
+            left: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "@nobody",
+                  style: TextStyle(
+                    fontSize: Sizes.size20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Gaps.v20,
+                Row(
+                  children: [
+                    Text(
+                      _fullCaption ? _videoCaption : _checkLongCaption(),
+                      style: const TextStyle(
+                        fontSize: Sizes.size16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: true,
+                    ),
+                    if (_videoCaption.length > 25 && !_fullCaption)
+                      GestureDetector(
+                        onTap: _onSeeMoreTap,
+                        child: const Text(
+                          "See more",
+                          style: TextStyle(
+                            fontSize: Sizes.size16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
               bottom: 20,
-              left: 10,
+              right: 10,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "@nobody",
-                    style: TextStyle(
-                      fontSize: Sizes.size20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  const CircleAvatar(
+                    foregroundImage: NetworkImage(
+                        "https://avatars.githubusercontent.com/u/131842228?v=4"),
+                    radius: 25,
+                    child: Text("JY"),
+                  ),
+                  Gaps.v20,
+                  const VideoButton(
+                    icon: FontAwesomeIcons.solidHeart,
+                    text: "200",
+                  ),
+                  Gaps.v20,
+                  GestureDetector(
+                    onTap: () => _onCommentsTap(context),
+                    child: const VideoButton(
+                      icon: FontAwesomeIcons.solidComment,
+                      text: "476",
                     ),
                   ),
                   Gaps.v20,
-                  Row(
-                    children: [
-                      Text(
-                        _fullCaption ? _videoCaption : _checkLongCaption(),
-                        style: const TextStyle(
-                          fontSize: Sizes.size16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        softWrap: true,
-                      ),
-                      if (_videoCaption.length > 25 && !_fullCaption)
-                        GestureDetector(
-                          onTap: _onSeeMoreTap,
-                          child: const Text(
-                            "See more",
-                            style: TextStyle(
-                              fontSize: Sizes.size16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
+                  const VideoButton(
+                    icon: FontAwesomeIcons.share,
+                    text: "Share",
+                  )
                 ],
               ))
         ],

@@ -38,17 +38,31 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
     super.dispose();
   }
 
+  Future<void> _onRefresh() {
+    return Future.delayed(
+      const Duration(seconds: 5),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        pageSnapping: true, //스코롤이 자동으로 안넘어가게 하는것.
+    return RefreshIndicator(
+      color: Theme.of(context).primaryColor,
+      backgroundColor: Colors.white,
+      edgeOffset: 10,
+      displacement: 50,
+      onRefresh:
+          _onRefresh, //it whould retrun future, indicator will stay until future gone.
+      child: PageView.builder(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          pageSnapping: true, //스코롤이 자동으로 안넘어가게 하는것.
 
-        scrollDirection:
-            Axis.vertical, //원래는 horizontal이나 이렇게하면 from top to bottom.
-        itemCount: _itemCount,
-        itemBuilder: (context, index) =>
-            VideoPost(onVideoFinished: _onVideoFinished, index: index));
+          scrollDirection:
+              Axis.vertical, //원래는 horizontal이나 이렇게하면 from top to bottom.
+          itemCount: _itemCount,
+          itemBuilder: (context, index) =>
+              VideoPost(onVideoFinished: _onVideoFinished, index: index)),
+    );
   }
 }
