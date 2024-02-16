@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/%08videos/video_timeline_screen.dart';
+import 'package:tiktok_clone/features/discover/discover_screen.dart';
 
 import 'package:tiktok_clone/features/main_navigation/widgets/nav_tab.dart';
 import 'package:tiktok_clone/features/main_navigation/widgets/post_video_button.dart';
@@ -16,7 +17,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final screens = [
     const Center(
@@ -73,15 +74,15 @@ class _MainScreenState extends State<MainScreen> {
           Offstage(
               offstage: _selectedIndex != 0,
               child: const VideoTimelineScreen()),
-          Offstage(offstage: _selectedIndex != 0, child: Container()),
-          Offstage(offstage: _selectedIndex != 1, child: Container()),
+          Offstage(
+              offstage: _selectedIndex != 1, child: const DiscoverScreen()),
           Offstage(offstage: _selectedIndex != 3, child: Container()),
           Offstage(offstage: _selectedIndex != 4, child: Container()),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
-        color: Colors.black,
+        color: _selectedIndex == 0 ? Colors.black : Colors.white,
         child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,35 +92,44 @@ class _MainScreenState extends State<MainScreen> {
                 selectedIcon: FontAwesomeIcons.house,
                 label: "Home",
                 isSelected: _selectedIndex == 0,
+                selectedIndex: _selectedIndex,
                 onTap: () => _onTap(0),
               ),
               NavTab(
-                  selectedIcon: FontAwesomeIcons.solidCompass,
-                  onTap: () => _onTap(1),
-                  icon: FontAwesomeIcons.compass,
-                  label: "Discover",
-                  isSelected: _selectedIndex == 1),
+                selectedIcon: FontAwesomeIcons.solidCompass,
+                onTap: () => _onTap(1),
+                icon: FontAwesomeIcons.compass,
+                label: "Discover",
+                isSelected: _selectedIndex == 1,
+                selectedIndex: _selectedIndex,
+              ),
               Gaps.h24,
               GestureDetector(
-                  onTap: _onPostVideoButtonTap,
-                  onTapDown: pressing,
-                  onTapUp: quit,
-                  child: PostVideoButton(
-                    fingerOn: onPressing,
-                  )),
+                onTap: _onPostVideoButtonTap,
+                onTapDown: pressing,
+                onTapUp: quit,
+                child: PostVideoButton(
+                  inverted: _selectedIndex != 0,
+                  fingerOn: onPressing,
+                ),
+              ),
               Gaps.h24,
               NavTab(
-                  selectedIcon: FontAwesomeIcons.solidMessage,
-                  onTap: () => _onTap(3),
-                  icon: FontAwesomeIcons.message,
-                  label: "Inbox",
-                  isSelected: _selectedIndex == 3),
+                selectedIcon: FontAwesomeIcons.solidMessage,
+                onTap: () => _onTap(3),
+                icon: FontAwesomeIcons.message,
+                label: "Inbox",
+                isSelected: _selectedIndex == 3,
+                selectedIndex: _selectedIndex,
+              ),
               NavTab(
-                  selectedIcon: FontAwesomeIcons.solidUser,
-                  onTap: () => _onTap(4),
-                  icon: FontAwesomeIcons.user,
-                  label: "Profile",
-                  isSelected: _selectedIndex == 4)
+                selectedIcon: FontAwesomeIcons.solidUser,
+                onTap: () => _onTap(4),
+                icon: FontAwesomeIcons.user,
+                label: "Profile",
+                isSelected: _selectedIndex == 4,
+                selectedIndex: _selectedIndex,
+              )
             ]),
       ),
     );
