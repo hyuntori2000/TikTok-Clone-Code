@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
-import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/%08videos/video_timeline_screen.dart';
+import 'package:tiktok_clone/features/Inbox/inbox_screen.dart';
 import 'package:tiktok_clone/features/discover/discover_screen.dart';
 
 import 'package:tiktok_clone/features/main_navigation/widgets/nav_tab.dart';
@@ -76,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
               child: const VideoTimelineScreen()),
           Offstage(
               offstage: _selectedIndex != 1, child: const DiscoverScreen()),
-          Offstage(offstage: _selectedIndex != 3, child: Container()),
+          Offstage(offstage: _selectedIndex != 3, child: const InboxScreen()),
           Offstage(offstage: _selectedIndex != 4, child: Container()),
         ],
       ),

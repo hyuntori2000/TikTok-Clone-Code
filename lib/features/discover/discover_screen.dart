@@ -15,8 +15,9 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _textEditingController =
-      TextEditingController(text: "What are you looking for?");
+  final TextEditingController _textEditingController = TextEditingController(
+    text: "What are you looking for?",
+  );
 
   late TabController _tabController;
 
@@ -25,7 +26,9 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController = TabController(
+        length: tabs.length,
+        vsync: this); //add Single Ticker Provider to use vsyn.
     _tabController.addListener(_onTabSelection);
     _textEditingController.addListener(_onTyping);
   }
@@ -39,6 +42,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   void _onTabSelection() {
     if (_tabController.indexIsChanging) {
       Future.delayed(Duration.zero, () {
+        //
         if (FocusScope.of(context).hasFocus) {
           FocusScope.of(context).unfocus();
           setState(() {
@@ -49,14 +53,10 @@ class _DiscoverScreenState extends State<DiscoverScreen>
     }
   }
 
-  void _deleteText() {
-    _textEditingController.text = "";
-  }
-
   @override
   void dispose() {
-    _tabController;
-    _textEditingController;
+    _tabController.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -67,43 +67,8 @@ class _DiscoverScreenState extends State<DiscoverScreen>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: SizedBox(
-            height: 44,
-            child: TextField(
-              onTap: _onTyping,
-              controller: _textEditingController,
-              cursorColor: Theme.of(context).primaryColor,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey.shade300,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(
-                      Sizes.size12,
-                    ),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FaIcon(
-                      FontAwesomeIcons.magnifyingGlass,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: _deleteText,
-                      child: _isTyping
-                          ? FaIcon(
-                              FontAwesomeIcons.solidCircleXmark,
-                              color: Colors.grey.shade500,
-                            )
-                          : null,
-                    ),
-                  )),
-            ),
+          title: CupertinoTextField(
+            controller: _textEditingController,
           ),
           bottom: TabBar(
             controller: _tabController,
