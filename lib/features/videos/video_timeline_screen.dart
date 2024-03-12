@@ -34,7 +34,6 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
