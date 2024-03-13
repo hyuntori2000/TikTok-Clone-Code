@@ -58,55 +58,81 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ],
                     ),
                     Gaps.v20,
-                    SizedBox(
-                      height: 51,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const UserInfoWidget(number: "37", type: "Following"),
-                          VerticalDivider(
-                            color: Colors.grey.shade200,
-                            width: 30,
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          const UserInfoWidget(
-                              number: "10.3M", type: "Followers"),
-                          VerticalDivider(
-                            color: Colors.grey.shade200,
-                            width: 30,
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          const UserInfoWidget(number: "149.3M", type: "Likes")
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const UserInfoWidget(number: "37", type: "Following"),
+                        VerticalDivider(
+                          color: Colors.grey.shade200,
+                          width: 30,
+                          thickness: 1,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                        const UserInfoWidget(
+                            number: "10.3M", type: "Followers"),
+                        VerticalDivider(
+                          color: Colors.grey.shade200,
+                          width: 30,
+                          thickness: 1,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                        const UserInfoWidget(number: "149.3M", type: "Likes")
+                      ],
                     ),
                     Gaps.v14,
-                    FractionallySizedBox(
-                      widthFactor: 0.33,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: Sizes.size12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(
-                              Sizes.size4,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: FractionallySizedBox(
+                            widthFactor: 1,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: Sizes.size12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(
+                                    Sizes.size4,
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                "Follow",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
-                        child: const Text(
-                          "Follow",
-                          style: TextStyle(
-                            color: Colors.white,
+                        Gaps.h5,
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                              width: 2,
+                            ),
                           ),
-                          textAlign: TextAlign.center,
+                          child: const FaIcon(FontAwesomeIcons.youtube),
                         ),
-                      ),
+                        Gaps.h5,
+                        Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey.shade200,
+                                width: 2,
+                              ),
+                            ),
+                            child: const Icon(Icons.more_horiz))
+                      ],
                     ),
                     Gaps.v14,
                     const Padding(
@@ -179,7 +205,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     crossAxisSpacing: Sizes.size2,
                     mainAxisSpacing: Sizes.size2,
                     childAspectRatio: 9 / 10),
-                itemBuilder: (context, index) => Column(
+                itemBuilder: (context, index) => Stack(
                   children: [
                     AspectRatio(
                       aspectRatio: 9 / 10,
@@ -189,6 +215,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           image:
                               "https://plus.unsplash.com/premium_photo-1706625679706-68b966f820f2?q=80&w=1664&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
                     ),
+                    Positioned(
+                      left: 5,
+                      bottom: 5,
+                      child: Row(
+                        children: [
+                          const FaIcon(
+                            FontAwesomeIcons.play,
+                            color: Colors.white,
+                            size: Sizes.size14,
+                          ),
+                          Gaps.h5,
+                          Text(
+                            "$index",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
