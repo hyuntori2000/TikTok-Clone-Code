@@ -17,7 +17,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainNavigationScreen> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 4;
 
   final screens = [
     const Center(
