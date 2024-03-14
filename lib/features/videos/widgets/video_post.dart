@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -26,6 +27,7 @@ class _VideoPostState extends State<VideoPost>
 
   bool _isPause = false;
   bool _fullCaption = false;
+  bool _volumeOn = true;
   final String _videoCaption = "This is the new kobe 4!";
 
   final Duration _animatedDuration = const Duration(milliseconds: 200);
@@ -44,6 +46,10 @@ class _VideoPostState extends State<VideoPost>
   void _initVideoPlayer() async {
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping((true));
+    if (kIsWeb) {
+      _videoPlayerController.setVolume(0);
+      _volumeOn = false;
+    }
     _videoPlayerController.addListener(_onVideoChange);
     setState(() {});
 
@@ -79,6 +85,20 @@ class _VideoPostState extends State<VideoPost>
     }
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
       _ontogglePause();
+    }
+  }
+
+  void _volumeOnOff() {
+    if (_volumeOn == false) {
+      setState(() {
+        _volumeOn = true;
+        _videoPlayerController.setVolume(0);
+      });
+    } else {
+      setState(() {
+        _volumeOn = false;
+        _videoPlayerController.setVolume(100);
+      });
     }
   }
 
@@ -163,6 +183,17 @@ class _VideoPostState extends State<VideoPost>
               ),
             ),
           )),
+          Positioned(
+            top: 20,
+            right: 10,
+            child: GestureDetector(
+                onTap: _volumeOnOff,
+                child: _volumeOn
+                    ? const FaIcon(
+                        FontAwesomeIcons.volumeHigh,
+                      )
+                    : const FaIcon(FontAwesomeIcons.volumeOff)),
+          ),
           Positioned(
             bottom: 20,
             left: 10,

@@ -45,8 +45,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       CircleAvatar(
                         radius: 45,
                         foregroundColor: Theme.of(context).primaryColor,
-                        foregroundImage: const NetworkImage(
-                            "https://scontent-lax3-1.cdninstagram.com/v/t51.2885-19/306356666_651427379513488_369495744330421048_n.jpg?stp=dst-jpg_s320x320&_nc_ht=scontent-lax3-1.cdninstagram.com&_nc_cat=104&_nc_ohc=QeGnV4VXysUAX8jw1Z9&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AfBdCHAlsRVzkSS0uUnnF8gBgqNkzVPEIlZHiRvZQf2azw&oe=65F51B78&_nc_sid=8b3546"),
                       ),
                       Gaps.v20,
                       Row(

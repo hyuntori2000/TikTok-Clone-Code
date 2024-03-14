@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/Inbox/activity_screen.dart';
+import 'package:tiktok_clone/features/authentication/login_form_screen.dart';
 import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok_clone/features/users/user_profile_screen.dart';
 
 void main() {
   runApp(const TikTokApp());
@@ -13,6 +14,7 @@ class TikTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'TikTok clone',
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -33,7 +35,7 @@ class TikTokApp extends StatelessWidget {
             color: Colors.white,
             surfaceTintColor: Colors.white,
           )),
-      home: const MainScreen(),
+      home: const MainNavigationScreen(),
     );
   }
 }
