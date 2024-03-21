@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/username_screen.dart';
 import 'package:tiktok_clone/features/authentication/log_in_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
+import 'package:tiktok_clone/features/utils.dart';
 
 class SignUpScreen extends StatelessWidget {
+  static String routeURL = "/";
+  static String routeName = "signUp";
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const LoginScreen(),
-    ));
+    context.go(LoginScreen.routeURL);
   }
 
   @override
@@ -35,38 +37,40 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ),
                   Gaps.v20,
-                  const Text(
+                  Text(
                     "Create a profile, follow other accounts, make your own videos, and more.",
                     style: TextStyle(
                       fontSize: Sizes.size16,
-                      color: Colors.black45,
+                      color: isDarkMode(context)
+                          ? Colors.grey.shade300
+                          : Colors.black45,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   Gaps.v40,
                   if (orientation == Orientation.portrait) ...[
-                    const AuthButton(
-                        type: UsernameScreen(),
-                        icon: FaIcon(FontAwesomeIcons.solidUser),
+                    AuthButton(
+                        type: UsernameScreen.routeName,
+                        icon: const FaIcon(FontAwesomeIcons.solidUser),
                         text: "Use phone or email"),
-                    const AuthButton(
-                        type: UsernameScreen(),
-                        icon: FaIcon(FontAwesomeIcons.apple),
+                    AuthButton(
+                        type: UsernameScreen.routeName,
+                        icon: const FaIcon(FontAwesomeIcons.apple),
                         text: "Continue with Facebook"),
                   ],
                   if (orientation == Orientation.landscape)
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen(),
-                              icon: FaIcon(FontAwesomeIcons.solidUser),
+                              type: UsernameScreen.routeName,
+                              icon: const FaIcon(FontAwesomeIcons.solidUser),
                               text: "Use phone or email"),
                         ),
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen(),
-                              icon: FaIcon(FontAwesomeIcons.apple),
+                              type: UsernameScreen.routeName,
+                              icon: const FaIcon(FontAwesomeIcons.apple),
                               text: "Continue with Facebook"),
                         ),
                       ],
@@ -76,7 +80,7 @@ class SignUpScreen extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: BottomAppBar(
-              color: Colors.grey.shade50,
+              color: isDarkMode(context) ? null : Colors.grey.shade50,
               elevation: 1,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: Sizes.size16),

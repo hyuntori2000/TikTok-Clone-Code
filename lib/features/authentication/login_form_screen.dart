@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/features/onboarding/interest_screen.dart';
 
 class LoginFormScreen extends StatefulWidget {
+  static String routeName = "/loginFormScreen";
   const LoginFormScreen({super.key});
 
   @override
@@ -21,12 +23,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         // that will trigger onSaved callback function. it means it will save the input when user hit the button.
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const InterestScreen(),
-            ), (route) {
-          return false;
-        });
+        context.push(InterestScreen.routename);
       } //because validate return true when it is true it means there is no error.
     }
   } // This is trigger. u

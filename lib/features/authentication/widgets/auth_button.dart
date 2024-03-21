@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AuthButton extends StatelessWidget {
   final String text;
   final FaIcon icon;
-  final Widget type;
+  final String type;
   const AuthButton({
     super.key,
     required this.text,
@@ -13,7 +14,7 @@ class AuthButton extends StatelessWidget {
     required this.type,
   });
   void onTapAuthButton(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => type));
+    context.pushNamed(type);
   }
 
   @override

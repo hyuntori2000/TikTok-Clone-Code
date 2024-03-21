@@ -9,7 +9,10 @@ import 'package:tiktok_clone/features/users/widgets/persistent_delegate.dart';
 import 'package:tiktok_clone/features/users/widgets/user_info_status.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  final String username;
+  final String tab;
+  const UserProfileScreen(
+      {super.key, required this.username, required this.tab});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -28,12 +31,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       body: SafeArea(
         child: DefaultTabController(
+          initialIndex: widget.tab == "likes" ? 1 : 0,
           length: 2,
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
-                  title: const Text("Jihyun"),
+                  title: Text(widget.username),
                   actions: [
                     IconButton(
                         onPressed: _onGearPressed,
@@ -53,9 +57,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text(
-                                  "@JihyunYuBen",
-                                  style: TextStyle(
+                                Text(
+                                  "@${widget.username}",
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -147,11 +151,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ],
                             ),
                             Gaps.v14,
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: Sizes.size32),
                               child: Text(
-                                "I'm Jihyun Yu!I'm Jihyun Yu!I'm Jihyun Yu!I'm Jihyun Yu!I'm Jihyun Yu!I'm Jihyun Yu!",
+                                "I'm ${widget.username} Yu!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!",
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -194,9 +198,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const Text(
-                                      "@JihyunYuBen",
-                                      style: TextStyle(
+                                    Text(
+                                      "@${widget.username}",
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -207,20 +211,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       size: Sizes.size10,
                                     ),
                                     Gaps.h32,
-                                    const Column(
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               vertical: 10),
                                           child: Text(
                                             overflow: TextOverflow.ellipsis,
-                                            "I'm Jihyun Yu!I'm Jihyun Yu!",
+                                            "I'm ${widget.username}!I'm ${widget.username}!",
                                             textAlign: TextAlign.center,
                                           ),
                                         ),
-                                        Row(
+                                        const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [

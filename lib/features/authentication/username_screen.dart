@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/features/authentication/%08email_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 
+class EmailScreenArgs {
+  final String username;
+  EmailScreenArgs(
+      {required this.username}); //this class is the box that saving the data that i recieve this screen. and pass to the next screen.
+}
+
 class UsernameScreen extends StatefulWidget {
+  static String routeURL = "username";
+  static String routeName = "username_screen";
   const UsernameScreen({super.key});
 
   @override
@@ -34,9 +43,8 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   void onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const EmailScreen(),
-    ));
+    context.pushNamed(EmailScreen.routeName,
+        extra: EmailScreenArgs(username: _username));
   }
 
   @override
