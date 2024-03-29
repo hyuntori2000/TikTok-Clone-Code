@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/%08videos/widgets/%08flash_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
@@ -118,48 +119,29 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                                   ),
                                 ),
                                 Gaps.v10,
-                                IconButton(
-                                  color: _flashMode == FlashMode.off
-                                      ? Colors.yellow
-                                      : Colors.white,
-                                  onPressed: () => _setFlashMode(FlashMode.off),
-                                  icon: const Icon(
-                                    Icons.flash_off_rounded,
-                                  ),
-                                ),
+                                FlashButton(
+                                    currentflashMode: _flashMode,
+                                    setFlashMode: _setFlashMode,
+                                    buttonflashMode: FlashMode.off,
+                                    buttonicon: Icons.flash_off_rounded),
                                 Gaps.v10,
-                                IconButton(
-                                  color: _flashMode == FlashMode.always
-                                      ? Colors.yellow
-                                      : Colors.white,
-                                  onPressed: () =>
-                                      _setFlashMode(FlashMode.always),
-                                  icon: const Icon(
-                                    Icons.flash_on_rounded,
-                                  ),
-                                ),
+                                FlashButton(
+                                    currentflashMode: _flashMode,
+                                    setFlashMode: _setFlashMode,
+                                    buttonflashMode: FlashMode.always,
+                                    buttonicon: Icons.flash_on_rounded),
                                 Gaps.v10,
-                                IconButton(
-                                  color: _flashMode == FlashMode.auto
-                                      ? Colors.yellow
-                                      : Colors.white,
-                                  onPressed: () =>
-                                      _setFlashMode(FlashMode.auto),
-                                  icon: const Icon(
-                                    Icons.flash_auto_rounded,
-                                  ),
-                                ),
+                                FlashButton(
+                                    currentflashMode: _flashMode,
+                                    setFlashMode: _setFlashMode,
+                                    buttonflashMode: FlashMode.auto,
+                                    buttonicon: Icons.flash_auto_rounded),
                                 Gaps.v10,
-                                IconButton(
-                                  color: _flashMode == FlashMode.torch
-                                      ? Colors.yellow
-                                      : Colors.white,
-                                  onPressed: () =>
-                                      _setFlashMode(FlashMode.torch),
-                                  icon: const Icon(
-                                    Icons.flashlight_on_rounded,
-                                  ),
-                                ),
+                                FlashButton(
+                                    currentflashMode: _flashMode,
+                                    setFlashMode: _setFlashMode,
+                                    buttonflashMode: FlashMode.torch,
+                                    buttonicon: Icons.flashlight_on_rounded),
                               ],
                             )
                           : Column(
