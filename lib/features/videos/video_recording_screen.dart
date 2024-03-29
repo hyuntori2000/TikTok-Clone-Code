@@ -14,17 +14,21 @@ class VideoRecordingScreen extends StatefulWidget {
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _hasPermission = false;
   bool _deniedPermission = false;
-  late final CameraController _cameraController;
+  bool _isSelfieMode = false;
+  late CameraController _cameraController;
+  late FlashMode _flashMode;
+
   Future<void> initCamera() async {
     final cameras =
         await availableCameras(); // this will give lists of all camera.
     if (cameras.isEmpty) {
       return;
     } //만약에 카메라를 인식하지 못했을경우 실행을 중단한다.
-    _cameraController =
-        CameraController(cameras[0], ResolutionPreset.ultraHigh);
+    _cameraController = CameraController(
+        cameras[_isSelfieMode ? 1 : 0], ResolutionPreset.ultraHigh);
 
     await _cameraController.initialize();
+    _flashMode = _cameraController.value.flashMode;
   }
 
   Future<void> initPermissions() async {
@@ -45,10 +49,22 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     }
   }
 
+  Future<void> _setFlashMode(FlashMode newFlashMode) async {
+    await _cameraController.setFlashMode(newFlashMode);
+    _flashMode = newFlashMode;
+    setState(() {});
+  }
+
   @override
   void initState() {
     initPermissions();
     super.initState();
+  }
+
+  Future<void> _toggleSelphieMode() async {
+    _isSelfieMode = !_isSelfieMode;
+    await initCamera(); // after changeing the cameramode we should initialize the camera again.
+    setState(() {});
   }
 
   @override
@@ -65,7 +81,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                     !_deniedPermission
                         ? const Column(children: [
                             Text(
-                              "We need permissions...",
+                              "",
                               style: TextStyle(
                                 fontSize: Sizes.size16,
                               ),
@@ -88,6 +104,76 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
               : Stack(
                   children: [
                     CameraPreview(_cameraController),
+                    Positioned(
+                      top: 40,
+                      right: 20,
+                      child: !_isSelfieMode
+                          ? Column(
+                              children: [
+                                IconButton(
+                                  color: Colors.white,
+                                  onPressed: _toggleSelphieMode,
+                                  icon: const Icon(
+                                    Icons.cameraswitch_sharp,
+                                  ),
+                                ),
+                                Gaps.v10,
+                                IconButton(
+                                  color: _flashMode == FlashMode.off
+                                      ? Colors.yellow
+                                      : Colors.white,
+                                  onPressed: () => _setFlashMode(FlashMode.off),
+                                  icon: const Icon(
+                                    Icons.flash_off_rounded,
+                                  ),
+                                ),
+                                Gaps.v10,
+                                IconButton(
+                                  color: _flashMode == FlashMode.always
+                                      ? Colors.yellow
+                                      : Colors.white,
+                                  onPressed: () =>
+                                      _setFlashMode(FlashMode.always),
+                                  icon: const Icon(
+                                    Icons.flash_on_rounded,
+                                  ),
+                                ),
+                                Gaps.v10,
+                                IconButton(
+                                  color: _flashMode == FlashMode.auto
+                                      ? Colors.yellow
+                                      : Colors.white,
+                                  onPressed: () =>
+                                      _setFlashMode(FlashMode.auto),
+                                  icon: const Icon(
+                                    Icons.flash_auto_rounded,
+                                  ),
+                                ),
+                                Gaps.v10,
+                                IconButton(
+                                  color: _flashMode == FlashMode.torch
+                                      ? Colors.yellow
+                                      : Colors.white,
+                                  onPressed: () =>
+                                      _setFlashMode(FlashMode.torch),
+                                  icon: const Icon(
+                                    Icons.flashlight_on_rounded,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                IconButton(
+                                  color: Colors.white,
+                                  onPressed: _toggleSelphieMode,
+                                  icon: const Icon(
+                                    Icons.cameraswitch_sharp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    )
                   ],
                 ),
         ));

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -14,15 +13,11 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _chatTextInputController =
       TextEditingController();
-  String _text = "";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _chatTextInputController.addListener(() {
-      _text = _chatTextInputController.text;
-    });
+    _chatTextInputController.addListener(() {});
   }
 
   @override
@@ -162,11 +157,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     )),
                     Gaps.h20,
-                    Container(
-                      child: GestureDetector(
-                          onTap: _onSubmit,
-                          child: const FaIcon(FontAwesomeIcons.paperPlane)),
-                    )
+                    GestureDetector(
+                        onTap: _onSubmit,
+                        child: const FaIcon(FontAwesomeIcons.paperPlane))
                   ],
                 )),
           )
