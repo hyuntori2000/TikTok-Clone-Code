@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,10 +18,14 @@ class VideoRecordingScreen extends StatefulWidget {
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
+  final double _initZoomLevel = 1.0;
+  double _currentZoomLevel = 1.0;
+  double _maxZoomLevel = 1.0;
   bool _hasPermission = false;
   bool _deniedPermission = false;
   bool _isSelfieMode = false;
   bool _isCameraInitialized = false;
+  bool _isRecording = false;
   late CameraController _cameraController;
   late FlashMode _flashMode;
   late final AnimationController _buttonanimationController =
@@ -50,7 +55,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
     await _cameraController.initialize();
 
-_cameraController.getMaxZoomLevel()
+    _maxZoomLevel = await _cameraController.getMaxZoomLevel();
 
     _flashMode = _cameraController.value.flashMode;
 
@@ -124,6 +129,9 @@ _cameraController.getMaxZoomLevel()
 
     _buttonanimationController.forward();
     _timerAnimationController.forward();
+    setState(() {
+      _isRecording = true;
+    });
   }
 
   Future<void> _stopRecording() async {
@@ -131,6 +139,9 @@ _cameraController.getMaxZoomLevel()
     _buttonanimationController.reverse();
     _timerAnimationController.reset();
     final file = await _cameraController.stopVideoRecording();
+    setState(() {
+      _isRecording = false;
+    });
 
     if (!mounted) return;
 
@@ -143,10 +154,19 @@ _cameraController.getMaxZoomLevel()
                 )));
   }
 
-  void _onDragButton() {
-
-
+  void _onPanStart(DragStartDetails details) {
+    if (!_isRecording) return;
+    _cameraController.setZoomLevel(_initZoomLevel);
   }
+
+  Future<void> _onPanUpdate(DragUpdateDetails details) async {
+    if (!_isRecording) return;
+    double zoomChange = details.localPosition.dy * -0.01;
+    _currentZoomLevel = (_initZoomLevel + zoomChange).clamp(1.0, _maxZoomLevel);
+    await _cameraController.setZoomLevel(_currentZoomLevel);
+    setState(() {});
+  }
+
   @override
   void dispose() {
     _buttonanimationController.dispose();
@@ -290,8 +310,10 @@ _cameraController.getMaxZoomLevel()
                           children: [
                             const Spacer(),
                             GestureDetector(
-                              onPanDown: (DragDownDetails details) =>
-                                  _onDragButton(),
+                              onPanStart: (DragStartDetails details) =>
+                                  _onPanStart(details),
+                              onPanUpdate: (DragUpdateDetails details) =>
+                                  _onPanUpdate(details),
                               onTapDown: _startRecording,
                               onTapUp: (details) => _stopRecording(),
                               child: ScaleTransition(
