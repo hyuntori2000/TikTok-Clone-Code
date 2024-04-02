@@ -1,8 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/%08videos/video_preview_screen.dart';
 import 'package:tiktok_clone/features/%08videos/widgets/%08flash_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
@@ -12,12 +15,29 @@ class VideoRecordingScreen extends StatefulWidget {
   State<VideoRecordingScreen> createState() => _VideoRecordingScreenState();
 }
 
-class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
+class _VideoRecordingScreenState extends State<VideoRecordingScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   bool _hasPermission = false;
   bool _deniedPermission = false;
   bool _isSelfieMode = false;
+  bool _isCameraInitialized = false;
   late CameraController _cameraController;
   late FlashMode _flashMode;
+  late final AnimationController _buttonanimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 200));
+  late final AnimationController _timerAnimationController =
+      AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 10),
+    lowerBound: 0.0,
+    upperBound: 1.0,
+  );
+
+  late final Animation<double> _buttonAnimation = Tween(
+    begin: 1.0,
+    end: 1.3,
+  ).animate(_buttonanimationController);
 
   Future<void> initCamera() async {
     final cameras =
@@ -29,7 +49,25 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
         cameras[_isSelfieMode ? 1 : 0], ResolutionPreset.ultraHigh);
 
     await _cameraController.initialize();
+
+_cameraController.getMaxZoomLevel()
+
     _flashMode = _cameraController.value.flashMode;
+
+    await _cameraController
+        .prepareForVideoRecording(); //This is for ios, to get right sink between audio and video
+    setState(() {
+      _isCameraInitialized = true;
+    });
+  }
+
+  void disposeCamera() async {
+    if (_cameraController.value.isInitialized) {
+      await _cameraController.dispose();
+      setState(() {
+        _isCameraInitialized = false;
+      });
+    }
   }
 
   Future<void> initPermissions() async {
@@ -58,8 +96,18 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
 
   @override
   void initState() {
-    initPermissions();
     super.initState();
+    initPermissions();
+    WidgetsBinding.instance.addObserver(this);
+
+    _timerAnimationController.addListener(() {
+      setState(() {});
+    });
+    _timerAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _stopRecording();
+      }
+    });
   }
 
   Future<void> _toggleSelphieMode() async {
@@ -68,13 +116,87 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     setState(() {});
   }
 
+  Future<void> _startRecording(TapDownDetails _) async {
+    if (_cameraController.value.isRecordingVideo == true) {
+      return;
+    }
+    await _cameraController.startVideoRecording();
+
+    _buttonanimationController.forward();
+    _timerAnimationController.forward();
+  }
+
+  Future<void> _stopRecording() async {
+    if (!_cameraController.value.isRecordingVideo) return;
+    _buttonanimationController.reverse();
+    _timerAnimationController.reset();
+    final file = await _cameraController.stopVideoRecording();
+
+    if (!mounted) return;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VideoPreviewScreen(
+                  video: file,
+                  isPicked: false,
+                )));
+  }
+
+  void _onDragButton() {
+
+
+  }
+  @override
+  void dispose() {
+    _buttonanimationController.dispose();
+    _cameraController.dispose();
+    _timerAnimationController.dispose();
+
+    super.dispose();
+  }
+
+  Future<void> _onPickVideoPress() async {
+    final video = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+    );
+    if (video == null) return;
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPreviewScreen(
+          video: video,
+          isPicked: true,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_hasPermission) return;
+    if (!_cameraController.value.isInitialized) return;
+    if (state == AppLifecycleState.inactive) {
+      disposeCamera();
+    } else if (state == AppLifecycleState.resumed) {
+      if (!_isCameraInitialized) {
+        initCamera();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.black,
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: !_hasPermission || !_cameraController.value.isInitialized
+          child: !_hasPermission ||
+                  !_cameraController.value.isInitialized ||
+                  !_isCameraInitialized
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -103,8 +225,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                   ],
                 )
               : Stack(
+                  alignment: Alignment.center,
                   children: [
-                    CameraPreview(_cameraController),
+                    SizedBox(
+                      width: size.width,
+                      height: size.height,
+                      child: CameraPreview(_cameraController),
+                    ),
                     Positioned(
                       top: 40,
                       right: 20,
@@ -155,7 +282,57 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                                 ),
                               ],
                             ),
-                    )
+                    ),
+                    Positioned(
+                        width: MediaQuery.of(context).size.width,
+                        bottom: Sizes.size40,
+                        child: Row(
+                          children: [
+                            const Spacer(),
+                            GestureDetector(
+                              onPanDown: (DragDownDetails details) =>
+                                  _onDragButton(),
+                              onTapDown: _startRecording,
+                              onTapUp: (details) => _stopRecording(),
+                              child: ScaleTransition(
+                                scale: _buttonAnimation,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: Sizes.size80 + Sizes.size14,
+                                      height: Sizes.size80 + Sizes.size14,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.red.shade400,
+                                        strokeWidth: Sizes.size6,
+                                        value: _timerAnimationController.value,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: Sizes.size80,
+                                      height: Sizes.size80,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.red.shade400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: IconButton(
+                                    onPressed: _onPickVideoPress,
+                                    icon: const FaIcon(
+                                      FontAwesomeIcons.image,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                            )
+                          ],
+                        ))
                   ],
                 ),
         ));
