@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,8 +21,14 @@ class VideoRecordingScreen extends StatefulWidget {
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
+  bool get isCameraControllerInitialized =>
+      _cameraController.value.isInitialized;
+
   final double _initZoomLevel = 1.0;
+
   double _currentZoomLevel = 1.0;
+
+  late final bool _noCamera = kDebugMode && Platform.isIOS;
   double _maxZoomLevel = 1.0;
   bool _hasPermission = false;
   bool _deniedPermission = false;
@@ -102,7 +111,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   @override
   void initState() {
     super.initState();
-    initPermissions();
+    if (!_noCamera) {
+      initPermissions();
+    }
+    setState(() {
+      _hasPermission = true;
+    });
+
     WidgetsBinding.instance.addObserver(this);
 
     _timerAnimationController.addListener(() {
@@ -196,6 +211,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_noCamera) return;
     if (!_hasPermission) return;
     if (!_cameraController.value.isInitialized) return;
     if (state == AppLifecycleState.inactive) {
@@ -214,9 +230,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
         backgroundColor: Colors.black,
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: !_hasPermission ||
-                  !_cameraController.value.isInitialized ||
-                  !_isCameraInitialized
+          child: !_hasPermission
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -247,62 +261,63 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
               : Stack(
                   alignment: Alignment.center,
                   children: [
-                    SizedBox(
-                      width: size.width,
-                      height: size.height,
-                      child: CameraPreview(_cameraController),
-                    ),
-                    Positioned(
-                      top: 40,
-                      right: 20,
-                      child: !_isSelfieMode
-                          ? Column(
-                              children: [
-                                IconButton(
-                                  color: Colors.white,
-                                  onPressed: _toggleSelphieMode,
-                                  icon: const Icon(
-                                    Icons.cameraswitch_sharp,
+                    if (!_noCamera && _cameraController.value.isInitialized)
+                      SizedBox(
+                          width: size.width,
+                          height: size.height,
+                          child: CameraPreview(_cameraController)),
+                    if (!_noCamera)
+                      Positioned(
+                        top: 40,
+                        right: 20,
+                        child: !_isSelfieMode
+                            ? Column(
+                                children: [
+                                  IconButton(
+                                    color: Colors.white,
+                                    onPressed: _toggleSelphieMode,
+                                    icon: const Icon(
+                                      Icons.cameraswitch_sharp,
+                                    ),
                                   ),
-                                ),
-                                Gaps.v10,
-                                FlashButton(
-                                    currentflashMode: _flashMode,
-                                    setFlashMode: _setFlashMode,
-                                    buttonflashMode: FlashMode.off,
-                                    buttonicon: Icons.flash_off_rounded),
-                                Gaps.v10,
-                                FlashButton(
-                                    currentflashMode: _flashMode,
-                                    setFlashMode: _setFlashMode,
-                                    buttonflashMode: FlashMode.always,
-                                    buttonicon: Icons.flash_on_rounded),
-                                Gaps.v10,
-                                FlashButton(
-                                    currentflashMode: _flashMode,
-                                    setFlashMode: _setFlashMode,
-                                    buttonflashMode: FlashMode.auto,
-                                    buttonicon: Icons.flash_auto_rounded),
-                                Gaps.v10,
-                                FlashButton(
-                                    currentflashMode: _flashMode,
-                                    setFlashMode: _setFlashMode,
-                                    buttonflashMode: FlashMode.torch,
-                                    buttonicon: Icons.flashlight_on_rounded),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                IconButton(
-                                  color: Colors.white,
-                                  onPressed: _toggleSelphieMode,
-                                  icon: const Icon(
-                                    Icons.cameraswitch_sharp,
+                                  Gaps.v10,
+                                  FlashButton(
+                                      currentflashMode: _flashMode,
+                                      setFlashMode: _setFlashMode,
+                                      buttonflashMode: FlashMode.off,
+                                      buttonicon: Icons.flash_off_rounded),
+                                  Gaps.v10,
+                                  FlashButton(
+                                      currentflashMode: _flashMode,
+                                      setFlashMode: _setFlashMode,
+                                      buttonflashMode: FlashMode.always,
+                                      buttonicon: Icons.flash_on_rounded),
+                                  Gaps.v10,
+                                  FlashButton(
+                                      currentflashMode: _flashMode,
+                                      setFlashMode: _setFlashMode,
+                                      buttonflashMode: FlashMode.auto,
+                                      buttonicon: Icons.flash_auto_rounded),
+                                  Gaps.v10,
+                                  FlashButton(
+                                      currentflashMode: _flashMode,
+                                      setFlashMode: _setFlashMode,
+                                      buttonflashMode: FlashMode.torch,
+                                      buttonicon: Icons.flashlight_on_rounded),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  IconButton(
+                                    color: Colors.white,
+                                    onPressed: _toggleSelphieMode,
+                                    icon: const Icon(
+                                      Icons.cameraswitch_sharp,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                    ),
+                                ],
+                              ),
+                      ),
                     Positioned(
                         width: MediaQuery.of(context).size.width,
                         bottom: Sizes.size40,
