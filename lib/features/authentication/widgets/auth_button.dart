@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class AuthButton extends StatelessWidget {
   final String text;
   final FaIcon icon;
-  final String type;
+  final Widget type;
   const AuthButton({
     super.key,
     required this.text,
@@ -14,7 +14,7 @@ class AuthButton extends StatelessWidget {
     required this.type,
   });
   void onTapAuthButton(BuildContext context) {
-    context.pushNamed(type);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => type));
   }
 
   @override

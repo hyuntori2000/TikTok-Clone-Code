@@ -5,6 +5,8 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 
 class ActivityScreen extends StatefulWidget {
+  static const routeName = "activity";
+  static const routeUrl = "/activity";
   const ActivityScreen({super.key});
 
   @override

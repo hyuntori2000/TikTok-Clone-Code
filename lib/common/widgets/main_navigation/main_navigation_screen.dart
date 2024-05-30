@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
+import 'package:tiktok_clone/features/%08videos/video_recording_screen.dart';
 import 'package:tiktok_clone/features/%08videos/video_timeline_screen.dart';
 import 'package:tiktok_clone/features/Inbox/inbox_screen.dart';
 import 'package:tiktok_clone/features/discover/discover_screen.dart';
 
-import 'package:tiktok_clone/features/main_navigation/widgets/nav_tab.dart';
-import 'package:tiktok_clone/features/main_navigation/widgets/post_video_button.dart';
+import 'package:tiktok_clone/common/widgets/main_navigation/widgets/nav_tab.dart';
+import 'package:tiktok_clone/common/widgets/main_navigation/widgets/post_video_button.dart';
 import 'package:tiktok_clone/features/users/user_profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  static String routename = "/main";
-  const MainNavigationScreen({super.key});
+  static String routename = "mainNavigation";
+
+  final String tab;
+  const MainNavigationScreen({super.key, required this.tab});
 
   @override
   State<MainNavigationScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainNavigationScreen> {
-  int _selectedIndex = 4;
-
-  final screens = [
-    const Center(
-      child: Text('home'),
-    ),
-    const Center(
-      child: Text('Search'),
-    ),
-    const Center(
-      child: Text('home'),
-    ),
-    const Center(
-      child: Text('Search'),
-    ),
-    const Center(
-      child: Text('Hi'),
-    )
+  final List<String> _tabs = [
+    "home",
+    "discover",
+    "xxxx",
+    "inbox",
+    "profile",
   ];
+
+  late int _selectedIndex = _tabs.indexOf(widget.tab);
+
   bool onPressing = false;
   void pressing(TapDownDetails) {
     setState(() {
@@ -51,18 +46,14 @@ class _MainScreenState extends State<MainNavigationScreen> {
   }
 
   void _onTap(int index) {
+    context.go("/${_tabs[index]}");
     setState(() {
       _selectedIndex = index;
     });
   }
 
   void _onPostVideoButtonTap() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => Scaffold(
-        appBar: AppBar(title: const Text('Recording')),
-      ),
-      fullscreenDialog: true,
-    ));
+    context.pushNamed(VideoRecordingScreen.routeName);
   }
 
   @override

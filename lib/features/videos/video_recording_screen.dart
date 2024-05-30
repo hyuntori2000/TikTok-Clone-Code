@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -13,6 +14,8 @@ import 'package:tiktok_clone/features/%08videos/video_preview_screen.dart';
 import 'package:tiktok_clone/features/%08videos/widgets/%08flash_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
+  static const routeName = "videoRecording";
+  static const routeUrl = "/upload";
   const VideoRecordingScreen({super.key});
 
   @override
@@ -185,9 +188,10 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   @override
   void dispose() {
     _buttonanimationController.dispose();
-    _cameraController.dispose();
     _timerAnimationController.dispose();
-
+    if (!_noCamera) {
+      _cameraController.dispose();
+    }
     super.dispose();
   }
 
@@ -266,6 +270,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                           width: size.width,
                           height: size.height,
                           child: CameraPreview(_cameraController)),
+                    const Positioned(
+                        top: 40,
+                        left: 20,
+                        child: CloseButton(
+                          color: Colors.white,
+                        )),
                     if (!_noCamera)
                       Positioned(
                         top: 40,

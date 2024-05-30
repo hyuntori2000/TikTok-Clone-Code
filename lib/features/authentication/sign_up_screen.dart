@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/authentication/%08email_screen.dart';
 import 'package:tiktok_clone/features/authentication/username_screen.dart';
 import 'package:tiktok_clone/features/authentication/log_in_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
@@ -49,28 +50,28 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   Gaps.v40,
                   if (orientation == Orientation.portrait) ...[
-                    AuthButton(
-                        type: UsernameScreen.routeName,
-                        icon: const FaIcon(FontAwesomeIcons.solidUser),
+                    const AuthButton(
+                        type: UsernameScreen(),
+                        icon: FaIcon(FontAwesomeIcons.solidUser),
                         text: "Use phone or email"),
-                    AuthButton(
-                        type: UsernameScreen.routeName,
-                        icon: const FaIcon(FontAwesomeIcons.apple),
+                    const AuthButton(
+                        type: UsernameScreen(),
+                        icon: FaIcon(FontAwesomeIcons.apple),
                         text: "Continue with Facebook"),
                   ],
                   if (orientation == Orientation.landscape)
-                    Row(
+                    const Row(
                       children: [
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen.routeName,
-                              icon: const FaIcon(FontAwesomeIcons.solidUser),
+                              type: UsernameScreen(),
+                              icon: FaIcon(FontAwesomeIcons.solidUser),
                               text: "Use phone or email"),
                         ),
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen.routeName,
-                              icon: const FaIcon(FontAwesomeIcons.apple),
+                              type: UsernameScreen(),
+                              icon: FaIcon(FontAwesomeIcons.apple),
                               text: "Continue with Facebook"),
                         ),
                       ],

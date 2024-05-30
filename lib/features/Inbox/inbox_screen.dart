@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/Inbox/activity_screen.dart';
+import 'package:tiktok_clone/features/Inbox/chat_detail_screen.dart';
 import 'package:tiktok_clone/features/Inbox/direct_message.dart';
 
 class InboxScreen extends StatelessWidget {
   const InboxScreen({super.key});
   void _onDmPress(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const DirectMessageScreen(),
-    ));
+    context.pushNamed(DirectMessageScreen.routeName);
   }
 
   void _navigateToActivity(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ActivityScreen(),
-      ),
-    );
+    context.pushNamed(ActivityScreen.routeName);
   } // Beacuse it's stateless widget I',m supposed to pass context to tghe fuction manually.
 
   @override

@@ -23,7 +23,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         // that will trigger onSaved callback function. it means it will save the input when user hit the button.
-        context.push(InterestScreen.routename);
+        context.pushReplacementNamed(InterestScreen.routename);
       } //because validate return true when it is true it means there is no error.
     }
   } // This is trigger. u

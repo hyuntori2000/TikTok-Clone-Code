@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/Inbox/chat_detail_screen.dart';
 
 class DirectMessageScreen extends StatefulWidget {
+  static const routeName = "directMessage";
+  static const routeUrl = "/directMessage";
   const DirectMessageScreen({super.key});
 
   @override
@@ -45,7 +48,7 @@ class _DirectMessageScreenState extends State<DirectMessageScreen> {
   Widget _makeItem(int index) {
     return ListTile(
       onLongPress: () => _deleteItem(index),
-      onTap: _onChatTap,
+      onTap: () => _onChatTap(index),
       leading: const CircleAvatar(
         radius: 30,
         foregroundImage: NetworkImage(
@@ -56,7 +59,7 @@ class _DirectMessageScreenState extends State<DirectMessageScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "$index",
+            "지현 $index",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text("12:20 PM",
@@ -75,9 +78,13 @@ class _DirectMessageScreenState extends State<DirectMessageScreen> {
     );
   }
 
-  void _onChatTap() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const ChatScreen()));
+  void _onChatTap(int index) {
+    context.pushNamed(
+      ChatScreen.routeName,
+      params: {
+        "chatId": "$index",
+      },
+    );
   }
 
   @override
