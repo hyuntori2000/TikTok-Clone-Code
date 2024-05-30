@@ -29,9 +29,12 @@ class _VideoPostState extends State<VideoPost>
   bool _isPause = false;
   bool _fullCaption = false;
   bool _volumeOn = true;
+
+  bool _autoMute = videoConfig.autoMute;
   final String _videoCaption = "This is the new kobe 4!";
 
   final Duration _animatedDuration = const Duration(milliseconds: 200);
+
   late final AnimationController _animationController;
   void _onVideoChange() {
     if (_videoPlayerController.value.isInitialized) {
@@ -69,6 +72,12 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animatedDuration,
     );
+
+    videoConfig.addListener(() {
+      setState(() {
+        _autoMute = videoConfig.autoMute;
+      });
+    });
   }
 
   @override
@@ -146,8 +155,6 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
-    VideoConfigData.of(context).autoMute;
-
     return VisibilityDetector(
       key: Key("${widget.index}"),
       onVisibilityChanged: _onVisibilityChanged,
@@ -191,12 +198,12 @@ class _VideoPostState extends State<VideoPost>
             top: 40,
             child: IconButton(
               icon: FaIcon(
-                VideoConfigData.of(context).autoMute
+                _autoMute
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: VideoConfigData.of(context).toggleMuted,
+              onPressed: videoConfig.toggleAutoMute,
             ),
           ),
           Positioned(

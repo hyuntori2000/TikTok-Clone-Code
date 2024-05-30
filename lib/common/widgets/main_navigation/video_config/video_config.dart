@@ -1,44 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class VideoConfigData extends InheritedWidget {
-  final bool autoMute;
-  final void Function() toggleMuted;
-  const VideoConfigData(
-      {super.key,
-      required super.child,
-      required this.autoMute,
-      required this.toggleMuted});
+class VideoConfig extends ChangeNotifier {
+  bool autoMute = true;
 
-  static VideoConfigData of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<VideoConfigData>()!;
-  }
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return true;
+  void toggleAutoMute() {
+    autoMute = !autoMute;
+    notifyListeners(); //이렇게만 하면 이 위젯안에 있는 발류가 바뀐것 즉 스테이트풀 위젯처럼 작동하여 모든 해당 VideoConfig가 있는 위젯트리에 발류가 바뀜을 알려준다.
   }
 }
 
-class VideoConfig extends StatefulWidget {
-  final Widget child;
-  const VideoConfig({super.key, required this.child});
-
-  @override
-  State<VideoConfig> createState() => _VideoConfigState();
-}
-
-class _VideoConfigState extends State<VideoConfig> {
-  bool autoMute = false;
-
-  void toggleMuted() {
-    setState(() {
-      autoMute = !autoMute;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return VideoConfigData(
-        toggleMuted: toggleMuted, autoMute: autoMute, child: widget.child);
-  }
-}
+final videoConfig = VideoConfig();
