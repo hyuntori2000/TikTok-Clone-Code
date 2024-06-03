@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tiktok_clone/features/%08videos/video_recording_screen.dart';
+import 'package:tiktok_clone/features/%08videos/Views/video_recording_screen.dart';
 import 'package:tiktok_clone/features/Inbox/activity_screen.dart';
 import 'package:tiktok_clone/features/Inbox/chat_detail_screen.dart';
 import 'package:tiktok_clone/features/Inbox/direct_message.dart';

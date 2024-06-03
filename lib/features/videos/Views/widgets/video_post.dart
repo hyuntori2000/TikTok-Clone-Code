@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:tiktok_clone/common/widgets/main_navigation/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/%08videos/widgets/video_button.dart';
-import 'package:tiktok_clone/features/%08videos/widgets/video_comment.dart';
+import 'package:tiktok_clone/features/%08videos/Views/widgets/video_button.dart';
+import 'package:tiktok_clone/features/%08videos/Views/widgets/video_comment.dart';
+import 'package:tiktok_clone/features/%08videos/view_models/playback_config_viewmodel.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -53,6 +54,9 @@ class _VideoPostState extends State<VideoPost>
     if (kIsWeb) {
       _videoPlayerController.setVolume(0);
       _volumeOn = false;
+    } else {
+      _volumeOn = !context.read<PlaybackConfigViewModel>().muted;
+      _videoPlayerController.setVolume(_volumeOn ? 1 : 0);
     }
     _videoPlayerController.addListener(_onVideoChange);
     setState(() {});
@@ -72,6 +76,11 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animatedDuration,
     );
+
+    context
+        .read<PlaybackConfigViewModel>()
+        .addListener(_onPlaybackConfigChanged);
+    _volumeOn = !context.read<PlaybackConfigViewModel>().muted;
   }
 
   @override
@@ -80,12 +89,25 @@ class _VideoPostState extends State<VideoPost>
     super.dispose();
   }
 
+  void _onPlaybackConfigChanged() {
+    if (!mounted) return;
+    final muted = context.read<PlaybackConfigViewModel>().muted;
+    if (muted) {
+      _videoPlayerController.setVolume(0);
+    } else {
+      _videoPlayerController.setVolume(1);
+    }
+  }
+
   void _onVisibilityChanged(VisibilityInfo info) {
     if (!mounted) return;
     if (info.visibleFraction == 1 &&
         !_isPause &&
         !_videoPlayerController.value.isPlaying) {
-      _videoPlayerController.play();
+      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+      if (autoplay) {
+        _videoPlayerController.play();
+      }
     }
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
       _ontogglePause();
@@ -93,17 +115,10 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _volumeOnOff() {
-    if (_volumeOn == false) {
-      setState(() {
-        _volumeOn = true;
-        _videoPlayerController.setVolume(0);
-      });
-    } else {
-      setState(() {
-        _volumeOn = false;
-        _videoPlayerController.setVolume(100);
-      });
-    }
+    setState(() {
+      _volumeOn = !_volumeOn;
+      _videoPlayerController.setVolume(_volumeOn ? 1 : 0);
+    });
   }
 
   void _ontogglePause() {
@@ -191,16 +206,13 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: FaIcon(
-                context.watch<VideoConfig>().isMuted
-                    ? FontAwesomeIcons.volumeOff
-                    : FontAwesomeIcons.volumeHigh,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                context.read<VideoConfig>().toggleIsMuted();
-              },
-            ),
+                icon: FaIcon(
+                  !_volumeOn
+                      ? FontAwesomeIcons.volumeOff
+                      : FontAwesomeIcons.volumeHigh,
+                  color: Colors.white,
+                ),
+                onPressed: _volumeOnOff),
           ),
           Positioned(
             bottom: 20,

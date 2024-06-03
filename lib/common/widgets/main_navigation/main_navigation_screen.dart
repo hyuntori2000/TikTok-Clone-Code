@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
-import 'package:tiktok_clone/features/%08videos/video_recording_screen.dart';
-import 'package:tiktok_clone/features/%08videos/video_timeline_screen.dart';
+import 'package:tiktok_clone/features/%08videos/Views/video_recording_screen.dart';
+import 'package:tiktok_clone/features/%08videos/Views/video_timeline_screen.dart';
 import 'package:tiktok_clone/features/Inbox/inbox_screen.dart';
 import 'package:tiktok_clone/features/discover/discover_screen.dart';
 

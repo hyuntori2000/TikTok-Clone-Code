@@ -10,8 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/%08videos/video_preview_screen.dart';
-import 'package:tiktok_clone/features/%08videos/widgets/%08flash_button.dart';
+import 'package:tiktok_clone/features/%08videos/Views/video_preview_screen.dart';
+import 'package:tiktok_clone/features/%08videos/Views/widgets/%08flash_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   static const routeName = "videoRecording";
