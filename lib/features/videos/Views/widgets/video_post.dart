@@ -37,6 +37,8 @@ class _VideoPostState extends State<VideoPost>
   final Duration _animatedDuration = const Duration(milliseconds: 200);
 
   late final AnimationController _animationController;
+
+  late final PlaybackConfigViewModel _playbackConfigViewModel;
   void _onVideoChange() {
     if (_videoPlayerController.value.isInitialized) {
       if (_videoPlayerController.value.duration ==
@@ -55,7 +57,7 @@ class _VideoPostState extends State<VideoPost>
       _videoPlayerController.setVolume(0);
       _volumeOn = false;
     } else {
-      _volumeOn = !context.read<PlaybackConfigViewModel>().muted;
+      _volumeOn = !_playbackConfigViewModel.muted;
       _videoPlayerController.setVolume(_volumeOn ? 1 : 0);
     }
     _videoPlayerController.addListener(_onVideoChange);
@@ -67,6 +69,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void initState() {
     super.initState();
+    _playbackConfigViewModel = context.read<PlaybackConfigViewModel>();
     _initVideoPlayer();
 
     _animationController = AnimationController(
@@ -77,14 +80,13 @@ class _VideoPostState extends State<VideoPost>
       duration: _animatedDuration,
     );
 
-    context
-        .read<PlaybackConfigViewModel>()
-        .addListener(_onPlaybackConfigChanged);
-    _volumeOn = !context.read<PlaybackConfigViewModel>().muted;
+    _playbackConfigViewModel.addListener(_onPlaybackConfigChanged);
+    _volumeOn = !_playbackConfigViewModel.muted;
   }
 
   @override
   void dispose() {
+    _playbackConfigViewModel.removeListener(_onPlaybackConfigChanged);
     _videoPlayerController.dispose();
     super.dispose();
   }
