@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tiktok_clone/common/widgets/main_navigation/video_config/video_config.dart';
@@ -18,14 +19,9 @@ void main() async {
       await SharedPreferences.getInstance(); //get access to preferences
   final repository = VideoPlaybackConfigRepository(
       preferences); //using that initialize repository
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-          create: (context) => PlaybackConfigViewModel(
-              repository)) //initialize ViewModel with that repository.
-    ],
-    child: const TikTokApp(),
-  ));
+  runApp(
+    const ProviderScope(child: TikTokApp()),
+  );
 }
 
 class TikTokApp extends StatelessWidget {
