@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/features/%08videos/Views/widgets/video_post.dart';
+import 'package:tiktok_clone/features/%08videos/view_models/video_timeline_view_model.dart';
 
-class VideoTimelineScreen extends StatefulWidget {
+class VideoTimelineScreen extends ConsumerStatefulWidget {
   const VideoTimelineScreen({super.key});
 
   @override
-  State<VideoTimelineScreen> createState() => _VideoTimelineScreenState();
+  VideoTimelineScreenState createState() => VideoTimelineScreenState();
 }
 
-class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
+class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
   final PageController _pageController = PageController();
   final Duration _scrollDuration = const Duration(milliseconds: 100);
   final Curve _scrollCurve = Curves.linear;
@@ -45,23 +47,33 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      color: Theme.of(context).primaryColor,
-      backgroundColor: Colors.white,
-      edgeOffset: 10,
-      displacement: 50,
-      onRefresh:
-          _onRefresh, //it whould retrun future, indicator will stay until future gone.
-      child: PageView.builder(
-          controller: _pageController,
-          onPageChanged: _onPageChanged,
-          pageSnapping: true, //스코롤이 자동으로 안넘어가게 하는것.
+    return ref.watch(timelineProvider).when(
+        loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+        error: (error, stackTrace) => Center(
+              child: Text(
+                'Could not load videos: $error',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+        data: (videos) => RefreshIndicator(
+              color: Theme.of(context).primaryColor,
+              backgroundColor: Colors.white,
+              edgeOffset: 10,
+              displacement: 50,
+              onRefresh:
+                  _onRefresh, //it whould retrun future, indicator will stay until future gone.
+              child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  pageSnapping: true, //스코롤이 자동으로 안넘어가게 하는것.
 
-          scrollDirection:
-              Axis.vertical, //원래는 horizontal이나 이렇게하면 from top to bottom.
-          itemCount: _itemCount,
-          itemBuilder: (context, index) =>
-              VideoPost(onVideoFinished: _onVideoFinished, index: index)),
-    );
+                  scrollDirection: Axis
+                      .vertical, //원래는 horizontal이나 이렇게하면 from top to bottom.
+                  itemCount: videos.length,
+                  itemBuilder: (context, index) => VideoPost(
+                      onVideoFinished: _onVideoFinished, index: index)),
+            ));
   }
 }

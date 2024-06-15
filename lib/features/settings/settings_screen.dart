@@ -2,39 +2,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:tiktok_clone/common/widgets/main_navigation/video_config/video_config.dart';
 import 'package:tiktok_clone/features/%08videos/view_models/playback_config_viewmodel.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notification = false;
-  bool _agreement = false;
-
-  void _onNotificationChanged(bool? newValue) {
-    //bool? newValue의 뜻은 null값을 가질 수 있는 bool 타입의 variable 인 newValue를 뜻한다.
-    if (newValue == null) return;
-    setState(() {
-      _notification = newValue;
-    });
-  }
-
-  void _onAgreementChange(bool? newValue) {
-    //bool? newValue의 뜻은 null값을 가질 수 있는 bool 타입의 variable 인 newValue를 뜻한다.
-    if (newValue == null) return;
-    setState(() {
-      _agreement = newValue;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("setting"),
@@ -42,16 +19,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           SwitchListTile.adaptive(
-            value: context.watch<PlaybackConfigViewModel>().muted,
+            value: ref.watch(playbackConfigProvider).muted,
             onChanged: (value) =>
-                context.read<PlaybackConfigViewModel>().setMuted(value),
+                {ref.read(playbackConfigProvider.notifier).setMuted(value)},
             title: const Text("Mute video"),
             subtitle: const Text("Video will be muted by default"),
           ),
           SwitchListTile.adaptive(
-            value: context.watch<PlaybackConfigViewModel>().autoplay,
+            value: ref.watch(playbackConfigProvider).autoplay,
             onChanged: (value) =>
-                context.read<PlaybackConfigViewModel>().setAutoplay(value),
+                {ref.read(playbackConfigProvider.notifier).setAutoplay(value)},
             title: const Text("Auto Play"),
             subtitle: const Text("Video will autoplay by default"),
           ),
@@ -59,15 +36,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             inactiveThumbColor: Colors.black,
             inactiveTrackColor: Colors.grey.shade200,
             activeColor: Colors.black,
-            value: _agreement,
-            onChanged: _onAgreementChange,
+            value: false,
+            onChanged: (value) {},
             title: const Text("Marketing emails"),
           ),
           CheckboxListTile(
               activeColor: Colors.black,
               title: const Text("Enable notifications"),
-              value: _notification,
-              onChanged: _onNotificationChanged),
+              value: false,
+              onChanged: (value) {}),
           ListTile(
             onTap: () async {
               final date = await showDatePicker(

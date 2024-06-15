@@ -20,7 +20,10 @@ void main() async {
   final repository = VideoPlaybackConfigRepository(
       preferences); //using that initialize repository
   runApp(
-    const ProviderScope(child: TikTokApp()),
+    ProviderScope(overrides: [
+      playbackConfigProvider
+          .overrideWith(() => PlaybackConfigViewModel(repository))
+    ], child: const TikTokApp()),
   );
 }
 
