@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/login_form_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/social_auth_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok_clone/features/utils.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   static String routeURL = "/loginScreen";
   static String routeName = "login_screen";
   const LoginScreen({super.key});
@@ -18,7 +20,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: const SafeArea(
         child: Padding(
@@ -47,13 +49,14 @@ class LoginScreen extends StatelessWidget {
               ),
               Gaps.v40,
               AuthButton(
-                  type: LoginFormScreen(),
+                  type: "login",
+                  navigateTo: LoginFormScreen(),
                   icon: FaIcon(FontAwesomeIcons.solidUser),
                   text: "Use phone or email"),
               AuthButton(
-                  type: LoginFormScreen(),
-                  icon: FaIcon(FontAwesomeIcons.apple),
-                  text: "Continue with Facebook"),
+                  type: "Github",
+                  icon: FaIcon(FontAwesomeIcons.github),
+                  text: "Continue with Github"),
             ],
           ),
         ),

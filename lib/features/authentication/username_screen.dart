@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/features/authentication/%08email_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 
 class EmailScreenArgs {
@@ -11,16 +14,16 @@ class EmailScreenArgs {
       {required this.username}); //this class is the box that saving the data that i recieve this screen. and pass to the next screen.
 }
 
-class UsernameScreen extends StatefulWidget {
+class UsernameScreen extends ConsumerStatefulWidget {
   static String routeURL = "username";
   static String routeName = "username_screen";
   const UsernameScreen({super.key});
 
   @override
-  State<UsernameScreen> createState() => _UsernameScreenState();
+  ConsumerState<UsernameScreen> createState() => _UsernameScreenState();
 }
 
-class _UsernameScreenState extends State<UsernameScreen> {
+class _UsernameScreenState extends ConsumerState<UsernameScreen> {
   final TextEditingController _usernameController =
       TextEditingController(); //controlling textediting(listener).
   String _username = "";
@@ -43,6 +46,9 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   void onNextTap() {
     if (_username.isEmpty) return;
+    ref
+        .read(signUpForm.notifier)
+        .update((state) => {...state, "username": _username});
     Navigator.push(
         context,
         MaterialPageRoute(

@@ -3,9 +3,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tiktok_clone/common/widgets/main_navigation/video_config/video_config.dart';
 import 'package:tiktok_clone/features/%08videos/view_models/playback_config_viewmodel.dart';
+import 'package:tiktok_clone/features/authentication/repository/authentication_repo.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -92,10 +94,12 @@ class SettingsScreen extends ConsumerWidget {
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     CupertinoDialogAction(
-                      isDestructiveAction: true,
-                      child: const Text("Yes"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    )
+                        isDestructiveAction: true,
+                        child: const Text("Yes"),
+                        onPressed: () {
+                          ref.read(authRepo).signOut();
+                          context.go("/");
+                        })
                   ],
                 ),
               );

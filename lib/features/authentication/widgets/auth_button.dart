@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/features/authentication/login_form_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/social_auth_view_model.dart';
 
-class AuthButton extends StatelessWidget {
+class AuthButton extends ConsumerWidget {
   final String text;
   final FaIcon icon;
-  final Widget type;
-  const AuthButton({
-    super.key,
-    required this.text,
-    required this.icon,
-    required this.type,
-  });
-  void onTapAuthButton(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => type));
+  final String type;
+  final Widget? navigateTo;
+  const AuthButton(
+      {super.key,
+      required this.text,
+      required this.icon,
+      required this.type,
+      this.navigateTo});
+  void onTapAuthButton(BuildContext context, WidgetRef ref) {
+    if (type == "Github") {
+      ref.read(socialAuthProvier.notifier).githubSignIn(context);
+    } else if (navigateTo != null) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => navigateTo!));
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => onTapAuthButton(context),
+      onTap: () => onTapAuthButton(context, ref),
       child: FractionallySizedBox(
         widthFactor: 1,
         child: Padding(

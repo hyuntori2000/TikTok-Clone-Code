@@ -51,28 +51,30 @@ class SignUpScreen extends StatelessWidget {
                   Gaps.v40,
                   if (orientation == Orientation.portrait) ...[
                     const AuthButton(
-                        type: UsernameScreen(),
+                        type: "SignUp",
+                        navigateTo: UsernameScreen(),
                         icon: FaIcon(FontAwesomeIcons.solidUser),
                         text: "Use phone or email"),
                     const AuthButton(
-                        type: UsernameScreen(),
-                        icon: FaIcon(FontAwesomeIcons.apple),
-                        text: "Continue with Facebook"),
+                        type: "Github",
+                        icon: FaIcon(FontAwesomeIcons.github),
+                        text: "Continue with Github"),
                   ],
                   if (orientation == Orientation.landscape)
                     const Row(
                       children: [
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen(),
+                              type: "SignUp",
+                              navigateTo: UsernameScreen(),
                               icon: FaIcon(FontAwesomeIcons.solidUser),
                               text: "Use phone or email"),
                         ),
                         Expanded(
                           child: AuthButton(
-                              type: UsernameScreen(),
-                              icon: FaIcon(FontAwesomeIcons.apple),
-                              text: "Continue with Facebook"),
+                              type: "Github",
+                              icon: FaIcon(FontAwesomeIcons.github),
+                              text: "Continue with Github"),
                         ),
                       ],
                     )
