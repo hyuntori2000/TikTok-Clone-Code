@@ -47,7 +47,7 @@ class _UsernameScreenState extends ConsumerState<UsernameScreen> {
 
   void onNextTap() {
     if (_username.isEmpty) return;
-    ref.read(profileViewModel.notifier).setInputNAme(_username);
+    ref.read(profileViewModel.notifier).setInputName(_username);
     Navigator.push(
         context,
         MaterialPageRoute(

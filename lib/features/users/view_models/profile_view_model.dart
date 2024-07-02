@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/features/users/models/profile_model.dart';
 
-class ProfileViewModel extends Notifier<ProfileModel> {
+class ProfileViewModel extends AsyncNotifier<ProfileModel> {
   @override
   build() {
     return ProfileModel(
@@ -10,15 +10,21 @@ class ProfileViewModel extends Notifier<ProfileModel> {
     );
   }
 
-  void setInputNAme(String name) {
-    state = ProfileModel(inputName: name, inputBirthday: state.inputBirthday);
+  void setInputName(String name) {
+    state = AsyncValue.data(ProfileModel(
+      inputName: name,
+      inputBirthday: state.value!.inputBirthday,
+    ));
   }
 
   void setInputBirthday(String birthday) {
-    state = ProfileModel(inputName: state.inputName, inputBirthday: birthday);
+    state = AsyncValue.data(ProfileModel(
+      inputName: state.value!.inputName,
+      inputBirthday: birthday,
+    ));
   }
 }
 
-final profileViewModel = NotifierProvider<ProfileViewModel, ProfileModel>(
+final profileViewModel = AsyncNotifierProvider<ProfileViewModel, ProfileModel>(
   () => ProfileViewModel(),
 );

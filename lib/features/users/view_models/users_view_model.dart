@@ -21,14 +21,15 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
       throw Exception("Account not created");
     }
     state = const AsyncValue.loading();
+    final sideinfo = ref.read(profileViewModel);
     final profile = UserProfileModel(
         bio: "...",
         link: "...",
         uid: credential.user!.uid,
         name: credential.user!.displayName ?? "noname",
         email: credential.user!.email ?? "where@you.at",
-        username: ref.read(profileViewModel).inputName,
-        birthday: ref.read(profileViewModel).inputBirthday);
+        username: sideinfo.value?.inputName ?? "Notnamed",
+        birthday: sideinfo.value?.inputBirthday ?? "...");
     await _repository.createPRofile(profile);
     state = AsyncValue.data(profile);
   }
