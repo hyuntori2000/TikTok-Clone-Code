@@ -7,6 +7,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/features/onboarding/interest_screen.dart';
+import 'package:tiktok_clone/features/users/view_models/profile_view_model.dart';
 
 class BirthdayScreen extends ConsumerStatefulWidget {
   const BirthdayScreen({super.key});
@@ -18,6 +19,7 @@ class BirthdayScreen extends ConsumerStatefulWidget {
 class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
   final TextEditingController _birthdayController =
       TextEditingController(); //controlling textediting(listener).
+  String _birthday = "";
   DateTime initialDate =
       DateTime.now().subtract(const Duration(days: 365 * 12));
   @override
@@ -33,6 +35,7 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
   }
 
   void onNextTap() {
+    ref.read(profileViewModel.notifier).setInputBirthday(_birthday);
     ref.read(signUpProvider.notifier).signUp(context);
     // context.pushReplacementNamed(InterestScreen.routename);
   }
@@ -43,6 +46,9 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
   {
     final textDate = date.toString().split(" ").first;
     _birthdayController.value = TextEditingValue(text: textDate);
+    setState(() {
+      _birthday = textDate;
+    });
   }
 
   @override

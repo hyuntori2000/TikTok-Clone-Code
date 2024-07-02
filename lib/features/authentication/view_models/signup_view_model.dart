@@ -23,14 +23,14 @@ class SignUpViewModel extends AsyncNotifier<void> {
     state = const AsyncValue.loading();
     final form = ref.read(signUpForm);
     final users = ref.read(usersProvider.notifier);
-    final username = form['username'] ?? '';
+
     state = await AsyncValue.guard(() async {
       final usercredential = await _authRepo.emailsignUp(
         form["email"],
         form["password"],
       );
       if (usercredential.user != null) {
-        await users.createProfile(usercredential, username);
+        await users.createProfile(usercredential);
       }
     }); // AsyncValue.guard throw Future function and if there is any problem it will make state in error. if there is no problem it will return future with data.
     // state = AsyncValue.data(null); // when the loading is finished depose the loading state.

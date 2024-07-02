@@ -7,6 +7,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/features/authentication/%08email_screen.dart';
 import 'package:tiktok_clone/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
+import 'package:tiktok_clone/features/users/view_models/profile_view_model.dart';
 
 class EmailScreenArgs {
   final String username;
@@ -46,9 +47,7 @@ class _UsernameScreenState extends ConsumerState<UsernameScreen> {
 
   void onNextTap() {
     if (_username.isEmpty) return;
-    ref
-        .read(signUpForm.notifier)
-        .update((state) => {...state, "username": _username});
+    ref.read(profileViewModel.notifier).setInputNAme(_username);
     Navigator.push(
         context,
         MaterialPageRoute(
