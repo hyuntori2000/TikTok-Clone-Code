@@ -26,7 +26,7 @@ class UserRepository {
     final fileRef = _storage.ref().child(
         "avatars/$fileName"); // makeing space that we store file and named it.
     final task = await fileRef.putFile(
-        file); // add the image file into it. by defining it as a yask I can see the status of put file and control it.
+        file); // add the image file into it. by defining it as a task I can see the status of put file and control it.
   }
 
   //this only talk with firebase that is why we save this method in the repositroy.

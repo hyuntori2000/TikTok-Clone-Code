@@ -55,7 +55,11 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     }); // update data on the screen. beacause the usersviewmodel is the one who painting the screen.
   }
 
-  Future<void> onBioEdit() async {}
+  Future<void> onBioEdit(String editedbio) async {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(bio: editedbio));
+    await _userRepository.updateUser(state.value!.uid, {"bio": editedbio});
+  }
 }
 
 final usersProvider = AsyncNotifierProvider<UsersViewModel, UserProfileModel>(

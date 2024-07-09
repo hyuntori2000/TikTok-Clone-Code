@@ -7,6 +7,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/settings/settings_screen.dart';
 import 'package:tiktok_clone/features/users/view/avatar.dart';
+import 'package:tiktok_clone/features/users/view/bio.dart';
 import 'package:tiktok_clone/features/users/view_models/users_view_model.dart';
 import 'package:tiktok_clone/features/users/view/persistent_delegate.dart';
 import 'package:tiktok_clone/features/users/view/user_info_status.dart';
@@ -26,6 +27,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const SettingsScreen(),
     ));
+  }
+
+  void _onEditBio() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const BioEditScreen()));
   }
 
   @override
@@ -177,9 +183,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: Sizes.size32),
-                                      child: Text(
-                                        "I'm ${widget.username} Yu!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!I'm ${widget.username}!",
-                                        textAlign: TextAlign.center,
+                                      child: GestureDetector(
+                                        onTap: _onEditBio,
+                                        child: Text(
+                                          data.bio,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                     Gaps.v14,
